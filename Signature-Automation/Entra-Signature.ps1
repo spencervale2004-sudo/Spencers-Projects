@@ -1,28 +1,30 @@
 # Powershell to be run as system on the selected users machine #
 # Script will need an Entra app created on the Tenant to work correctly #
-# Client secret will technically need to be exposed to the machine of the user which is why it only has read only permissions *
+# Client secret will technically need to be exposed to the machine of the user which is why it only has read only permissions #
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Confirm:$false
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Scope CurrentUser -Force -Confirm:$false 
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 
+
+# ----Function---- Checks if a module is installed and then installs if missing #
 function Module-Check {
-
-  param (
-    [string]$ModuleName
-  )
-  
-  # Check if the module is installed
-  $module = Get-InstalledModule -Name "$ModuleName" -ErrorAction SilentlyContinue
-  
-  # If the module is not installed (count is 0), then install it
-  if ($module.Count -eq 0) {
-      Write-Host "$ModuleName is not installed. Installing now..."
-      Install-Module -Name $ModuleName -Force -AllowClobber -Scope CurrentUser -Confirm:$false
-  } else {
-      Write-Host "$ModuleName is already installed."
-  }
-
+      param (
+        [string]$ModuleName
+      )
+      
+      # Check if the module is installed
+      $module = Get-InstalledModule -Name "$ModuleName" -ErrorAction SilentlyContinue
+      
+      # If the module is not installed (count is 0), then install it
+      if ($module.Count -eq 0) {
+          Write-Host "$ModuleName is not installed. Installing now..."
+          Install-Module -Name $ModuleName -Force -AllowClobber -Scope CurrentUser -Confirm:$false
+      } else {
+          Write-Host "$ModuleName is already installed."
+      }   
 }
+
+
 # Use function above to download needed graph modules if not already installed
 Module-Check -ModuleName "Microsoft.Graph.Users"
 Module-Check -ModuleName "Microsoft.Graph.Authentication"
@@ -69,7 +71,7 @@ if (!$item) {
     Invoke-WebRequest -Uri "Url\Template\file\path.htm" -OutFile "C:\Temp\Company Default.htm" 
 }
 
-### Set 365 Users properties to variables ###
+### ----Variables---- Set 365 Users properties to variables ###
 $filePath = "C:\Temp\Company Default.htm"
 $Name = $365user.givenName
 $Surname = $365user.Surname
@@ -100,6 +102,7 @@ foreach ($Value in $Properties.Keys) {
 Write-Output "`n##### Entra Properties Below #####"
 $Properties
 
+####------------ if $Test variable is equal to 'no' then set registry keys to make new htm file the default signature for new emails and replys -----------####
 if ($Test -like "no") {
 # Creates new file if doesn't exist or overwrites (put Hyphen in name so it doesn't overwrite the old existing ones)
 if(!(Test-Path "C:\Users\$($User)\AppData\Roaming\Microsoft\Signatures")){
@@ -122,7 +125,7 @@ Set-Content -Path "C:\Users\$($User)\AppData\Roaming\Microsoft\Signatures\Compan
 
     Set-ItemProperty -Path "$key" -Name "ReplySignature" -Type String -Value "Company-Default"
 
-
+####---- if $Test variable is equal to anything other then 'no' then set only make htm file in a new folder in temp named '(Username) Signature Test' e.g. C:\Temp\(Username) Signature Test\Company-Default.htm  ----####
 } else {
 
     if(!(Test-Path "C:\Temp\$($User) Signature Test")){
