@@ -25,7 +25,7 @@ function Module-Check {
       # If the module is not installed (count is 0), then install it
       if ($module.Count -eq 0) {
           Write-Host "$ModuleName is not installed. Installing now..."
-          Install-Module -Name $ModuleName -Force -AllowClobber -Scope CurrentUser -Confirm:$false
+          Install-Module -Name $ModuleName -Force -AllowClobber -Confirm:$false
       } else {
           Write-Host "$ModuleName is already installed."
       }   
