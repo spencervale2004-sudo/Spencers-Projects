@@ -44,6 +44,8 @@ Run the code in the tab below to test replacement variables on your template.
 
 <summary>Powershell test replacement variables</summary>
 
+### Test Replacement Variables
+
 **After running the powershell a new .htm file will be created in a folder named 'Signature test' in your C:\temp that will have replaced the variables in your template with Test'_property_' (Can see in code below).**
 
 ```ruby
