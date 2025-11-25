@@ -38,6 +38,48 @@ From there it will read the content and replace the replacement variables outlin
 | `UserLocation`                 | OfficeLocation          | 
 | `UserStreetAddress`            | StreetAddress           |
 
+Run the code in the tab below to test replacement variables on your template.
+
+<details>
+
+<summary>Powershell test replacement variables</summary>
+
+**After running the powershell a new .htm file will be created in a folder named 'Signature test' in your C:\temp that will have replaced the variables in your template with Test'_property_' (Can see in code below).**
+
+```ruby
+# Set the file path variable to path of your template file #
+$filePath = "C:\Temp\Company Default.htm"
+
+### Left is text being replaced, right is the text replacing ###
+# Old text | New Text #
+$Properties = @{
+"Username" = "TestName"
+"UserSurname" = "TestSurname"
+"UserTitle" = "TestTitle"
+"UserPhone" = "TestPhone"
+"UserMobile" = "TestMobile"
+"UserPrincipalName" = "TestUserPrincipalName"
+"UserMail" = "TestMail"
+"UserLocation" = "TestOfficeLocation"
+"UserStreetAddress" = "TestStreetAddress"
+}
+# Get content of the template signature #
+$HTML = Get-Content $filePath
+
+# Replace template variables (Left in the table) in the template file with the new values (Right) #
+foreach ($Value in $Properties.Keys) {
+    $HTML = $HTML -replace $Value, $Properties[$Value]
+}
+# Create htm filepath if not already made
+    if(!(Test-Path "C:\Temp\Signature Test")){
+        New-Item -Path "C:\Temp\Signature Test" -ItemType Directory
+    }
+# Create or overwrite new .htm file
+Set-Content -Path "C:\Temp\Signature Test\Company-Default.htm" -Value $HTML
+```
+
+</details>
+
 ### Folder Structure
 
 It is up to the person working with the script to figure out where the template files within the script will be downloaded from. The only important thing is that the file is a .htm file and that it is able to be downloaded through a Powershell Invoke-WebRequest. 
