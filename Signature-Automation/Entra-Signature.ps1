@@ -80,17 +80,21 @@ $Phone = $365user.BusinessPhones
 $Mobile = $365user.MobilePhone
 $UserPrincipalName = $365user.UserPrincipalName
 $OfficeLocation = $365user.OfficeLocation
+$Mail = $365user.Mail
+$StreetAddress = $365user.StreetAddress
 
 ### Put variables in table for replacement (Left is text being replaced, right is the text replacing) ###
 # Old text | New Text #
 $Properties = @{
 "Username" = $Name
-"Surname" = $Surname
-"Title" = $Title
-"Phone" = $Phone
-"Mobile" = $Mobile
+"UserSurname" = $Surname
+"UserTitle" = $Title
+"UserPhone" = $Phone
+"UserMobile" = $Mobile
 "UserPrincipalName" = $UserPrincipalName
-"Location" = $OfficeLocation
+"UserMail" = $Mail
+"UserLocation" = $OfficeLocation
+"UserStreetAddress" = $StreetAddress
 }
 # Get content of the template signature #
 $HTML = Get-Content $filePath 
